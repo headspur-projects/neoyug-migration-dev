@@ -1,0 +1,42 @@
+/* MasterStudy Custom Layout Styles */
+
+/* Course Player Base Styles */
+.stm-lms-course-player {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0a0a0a;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+/* Course Header Styles */
+.stm-lms-course-player .course-header {
+    background: #000000;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Course Navigation Styles */
+.stm-lms-course-player .course-navigation {
+    background: #1a1a1a;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+/* Course Curriculum Styles */
+.stm-lms-course-player .course-curriculum {
+    background: #0a0a0a;
+    padding: 2rem;
+    flex: 1;
+}
+
+/* Course Content Area Styles */
+.stm-lms-course-player .course-content {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #2a2a2a;
+}
