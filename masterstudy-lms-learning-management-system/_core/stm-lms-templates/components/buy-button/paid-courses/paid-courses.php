@@ -231,7 +231,7 @@ if ( $show_buttons ) {
 					<div class="masterstudy-buy-button-dropdown__section">
 						<div class="masterstudy-buy-button-dropdown__head">
 							<span class="masterstudy-buy-button-dropdown__head-title">
-								<?php echo esc_html__( 'Course Subscription', 'masterstudy-lms-learning-management-system' ); ?>
+								<?php echo esc_html__( 'Program Subscription', 'masterstudy-lms-learning-management-system' ); ?>
 							</span>
 							<span class="masterstudy-buy-button-dropdown__head-checkbox"></span>
 						</div>
@@ -276,7 +276,7 @@ if ( $show_buttons ) {
 					<div class="masterstudy-buy-button-dropdown__section">
 						<div class="masterstudy-buy-button-dropdown__head">
 							<span class="masterstudy-buy-button-dropdown__head-title">
-								<?php echo esc_html__( 'Group course', 'masterstudy-lms-learning-management-system' ); ?>
+								<?php echo esc_html__( 'Group program', 'masterstudy-lms-learning-management-system' ); ?>
 							</span>
 							<span class="masterstudy-buy-button-dropdown__head-checkbox"></span>
 						</div>
