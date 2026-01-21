@@ -31,7 +31,7 @@ if ( ! empty( $course->duration_info ) && ! $course->is_udemy_course ) {
 
 if ( ! empty( $lessons ) ) {
 	$meta_fields['lectures'] = array(
-		'label'      => esc_html__( 'Lectures', 'masterstudy-lms-learning-management-system' ),
+		'label'      => esc_html__( 'Modules', 'masterstudy-lms-learning-management-system' ),
 		'text'       => $lessons,
 		'icon_class' => 'masterstudy-single-course-details__icon_lectures',
 	);
@@ -122,7 +122,7 @@ if ( ! empty( $meta_fields ) ) {
 	?>
 	<div class="masterstudy-single-course-details masterstudy-single-course-details_<?php echo esc_attr( $style ); ?>">
 		<span class="masterstudy-single-course-details__title">
-			<?php echo esc_html__( 'Course details', 'masterstudy-lms-learning-management-system' ); ?>
+			<?php echo esc_html__( 'Program details', 'masterstudy-lms-learning-management-system' ); ?>
 		</span>
 		<?php foreach ( $meta_fields as $meta_field_key => $meta_field ) { ?>
 			<div class="masterstudy-single-course-details__item">
