@@ -12,7 +12,7 @@
 	$current_lesson      = $course['current_lesson_id'] ?? '0';
 	$progress            = intval( $course['progress_percent'] ?? 0 );
 	$lesson_url          = STM_LMS_Lesson::get_lesson_url( $post_id, $current_lesson );
-	$btn_label           = esc_html__( 'Start course', 'masterstudy-lms-learning-management-system' );
+	$btn_label           = esc_html__( 'Start program', 'masterstudy-lms-learning-management-system' );
 	$trial_addon         = is_ms_lms_addon_enabled( 'shareware' );
 	$guest_trial_enabled = false;
 
@@ -33,7 +33,7 @@
 	} elseif ( empty( $user_id ) ) {
 		?>
 		<a class="masterstudy-buy-button__link masterstudy-buy-button__link_centered" href="#" data-authorization-modal="login">
-			<span class="masterstudy-buy-button__title"><?php echo esc_html__( 'Enroll course', 'masterstudy-lms-learning-management-system' ); ?></span>
+			<span class="masterstudy-buy-button__title"><?php echo esc_html__( 'Enroll program', 'masterstudy-lms-learning-management-system' ); ?></span>
 		</a>
 		<?php
 	} else {
