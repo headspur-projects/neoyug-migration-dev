@@ -1,9 +1,9 @@
 <?php
+
 stm_lms_register_style( 'user-courses' );
 stm_lms_register_style( 'instructor_courses' );
 stm_lms_register_style( 'expiration/main' );
 wp_enqueue_script( 'masterstudy-enrolled-courses' );
-wp_enqueue_script( 'stm-lms-countdown' );
 
 $is_pro_plus                = STM_LMS_Helpers::is_pro_plus();
 $options                    = get_option( 'stm_lms_settings' );
@@ -16,9 +16,13 @@ $reviews                    = STM_LMS_Options::get_option( 'course_tab_reviews',
 $not_empty_stats            = $reviews || $point || $certificate || $enterprise || $course_bundle;
 ?>
 
+<script>
+    window.course_levels_php = <?php echo wp_json_encode( $course_levels ); ?>;
+</script>
+
 <div id="enrolled-courses">
 	<div class="stm_lms_user_info_top">
-		<div class="masterstudy-enrolled-courses">
+		<!-- <div class="masterstudy-enrolled-courses">
 			<div class="masterstudy-enrolled-courses__title-wrapper">
 				<h3 class="masterstudy-enrolled-courses__title">
 					<?php echo esc_html__( 'Enrolled courses', 'masterstudy-lms-learning-management-system' ); ?>
@@ -177,7 +181,7 @@ $not_empty_stats            = $reviews || $point || $certificate || $enterprise 
 					</div>
 				</div>
 			<?php } ?>
-		</div>
+		</div> -->
 	</div>
 	<div class="stm-lms-user-courses">
 		<div class="multiseparator"></div>
@@ -188,14 +192,13 @@ $not_empty_stats            = $reviews || $point || $certificate || $enterprise 
 					<div class="stm_lms_instructor_courses__single--image">
 						<div class="stm_lms_post_status heading_font"
 							v-if="course.post_status"
-							v-bind:class="course.post_status.status"
-							:style="{color: `${course.post_status.text_color}`, background: `${course.post_status.bg_color}`}"
-						>
+							v-bind:class="course.post_status.status">
 							{{ course.post_status.label }}
 						</div>
 						<div v-html="course.image" class="image_wrapper"></div>
 						<?php STM_LMS_Templates::show_lms_template( 'account/private/parts/expiration' ); ?>
 					</div>
+
 					<div class="stm_lms_instructor_courses__single--inner">
 						<div class="stm_lms_instructor_courses__single--terms" v-if="course.terms">
 							<div class="stm_lms_instructor_courses__single--term" v-for="(term, key) in course.terms">
@@ -205,77 +208,134 @@ $not_empty_stats            = $reviews || $point || $certificate || $enterprise 
 							</div>
 						</div>
 						<div class="stm_lms_instructor_courses__single--title">
+
+							<div class="stm_lms_instructor_courses__single--progress_bar">
+								<div class="stm_lms_instructor_courses__single--progress_filled"
+									v-bind:style="{'width' : course.progress + '%'}"></div>
+							</div>
+							
 							<a v-bind:href="course.link">
 								<h5 v-html="course.title"></h5>
 							</a>
 						</div>
 						<div class="stm_lms_instructor_courses__single--progress">
 							<div class="stm_lms_instructor_courses__single--progress_top">
-								<div class="stm_lms_instructor_courses__single--duration" v-if="course.duration">
-									<i class="stmlms-clock"></i>
-									{{ course.duration }}
+
+							    <div class="levelss">
+
+									<!-- Show Course ID for DEBUG (optional) -->
+									<!-- <div class="debug-course-id">
+										Course ID: {{ course.course_id }}
+									</div> -->
+
+									<!-- Correct: Show only the matched course level -->
+									 
+									<div class="stm-lms-course-info"
+										v-if="course_levels_php && course_levels_php[course.course_id]">
+										<div class="stm-lms-course-levelss">
+											<img src="https://staginglmsplugin.neoyug.com/wp-content/uploads/2026/01/level1-1.png" width="22" height="22" />
+											<span class="level">{{ course_levels_php[course.course_id].level_label }}</span>
+										</div>
+										<div class="stm-lms-course-lesson-count">
+											<img src="https://staginglmsplugin.neoyug.com/wp-content/uploads/2026/01/lectures1-1.png" width="22" height="22" />
+											<span class="lesson_count">{{ course_levels_php[course.course_id].lesson_count }} Modules</span>
+										</div>
+									</div>
+
+									<!-- Progress label -->
+									<div class="stm_lms_instructor_courses__single--completed">
+										{{ course.progress_label }}
+									</div>
+
 								</div>
+
+
+								<div class="stm_lms_instructor_courses__single--duration" v-if="course.duration">
+									<img src="https://staginglmsplugin.neoyug.com/wp-content/uploads/2026/01/clock1-1.png" width="22" height="22" />
+									<span class="duration">{{ course.duration }}</span>
+								</div>
+                                
+                                
 								<div class="stm_lms_instructor_courses__single--completed">
 									{{ course.progress_label }}
 								</div>
 							</div>
-							<div class="stm_lms_instructor_courses__single--progress_bar">
-								<div class="stm_lms_instructor_courses__single--progress_filled"
-									v-bind:style="{'width' : course.progress + '%'}"></div>
+
+							<!-- Course Meta Information -->
+							<div class="stm_lms_instructor_courses__single--meta">
+								<div class="stm_lms_course_meta">
+									<span v-if="course.duration">
+										<i class="far fa-clock"></i> {{ course.duration }}
+									</span>
+									<span v-if="course.lessons">
+										<i class="far fa-file-alt"></i> {{ course.lessons }} <?php esc_html_e( 'Modules', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
+									<span v-if="course.quizzes">
+										<i class="far fa-question-circle"></i> {{ course.quizzes }} <?php esc_html_e( 'Quizzes', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
+									<span v-if="course.level">
+										<i class="fas fa-signal"></i> {{ course.level }}
+									</span>
+								</div>
 							</div>
 						</div>
+
 						<div class="stm_lms_instructor_courses__single--enroll">
-							<a v-if="course.expiration.length && course.is_expired || course.membership_expired || course.membership_inactive || course.no_membership_plan" class="btn btn-default"
-								:href="course.url" target="_blank">
-								<span><?php esc_html_e( 'Preview Course', 'masterstudy-lms-learning-management-system' ); ?></span>
+							<a 
+								v-if="course.expiration.length && course.is_expired || course.membership_expired || course.membership_inactive || course.no_membership_plan" 
+								class="btn btn-default"
+								:href="course.current_lesson_id" 
+								target="_blank"
+							>
+								<span><?php esc_html_e( 'Start Program', 'masterstudy-lms-learning-management-system' ); ?></span>
 							</a>
-							<?php
-							if ( is_ms_lms_addon_enabled( 'coming_soon' ) ) {
-								?>
-								<a v-bind:href="course.current_lesson_id" class="btn btn-default"
+
+							<?php if ( is_ms_lms_addon_enabled( 'coming_soon' ) ) : ?>
+								<a 
+									v-bind:href="course.current_lesson_id" 
+									class="btn btn-default"
 									v-bind:class="{
-									'continue': course.progress !== '0',
-									'disabled coming-soon-not-allowed': course.availability === '1'
-								}"
-									v-else>
-									<span v-if="course.progress === '0' && course.availability === ''"><?php esc_html_e( 'Start Course', 'masterstudy-lms-learning-management-system' ); ?></span>
-									<?php
-									if ( is_ms_lms_addon_enabled( 'coming_soon' ) ) {
-										?>
-										<span
-											v-else-if="course.availability === '1'"><?php esc_html_e( 'Coming soon', 'masterstudy-lms-learning-management-system' ); ?></span>
-										<?php
-									}
-									?>
-									<span v-else-if="course.progress === '100'"><?php esc_html_e( 'Completed', 'masterstudy-lms-learning-management-system' ); ?></span>
-									<span v-else><?php esc_html_e( 'Continue', 'masterstudy-lms-learning-management-system' ); ?></span>
+										'continue': course.progress !== '0',
+										'disabled coming-soon-not-allowed': course.availability === '1'
+									}"
+									v-else
+								>
+									<span v-if="course.availability === '1'">
+										<?php esc_html_e( 'Coming soon', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
+									<span v-else-if="course.progress === '0'">
+										<?php esc_html_e( 'Start Program', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
+									<span v-else-if="course.progress === '100'">
+										<?php esc_html_e( 'Completed', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
+									<span v-else>
+										<?php esc_html_e( 'Resume Program', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
 								</a>
-								<?php
-							} else {
-								?>
-								<a v-bind:href="course.current_lesson_id" class="btn btn-default"
+							<?php else : ?>
+								<a 
+									v-bind:href="course.current_lesson_id" 
+									class="btn btn-default"
 									v-bind:class="{
-									'continue': course.progress !== '0',
-								}"
-									v-else>
-									<span v-if="course.progress === '0' && course.availability === ''"><?php esc_html_e( 'Start Course', 'masterstudy-lms-learning-management-system' ); ?></span>
-									<?php
-									if ( is_ms_lms_addon_enabled( 'coming_soon' ) ) {
-										?>
-										<span
-											v-else-if="course.availability === '1'"><?php esc_html_e( 'Coming soon', 'masterstudy-lms-learning-management-system' ); ?></span>
-										<?php
-									}
-									?>
-									<span v-else-if="course.progress === '100'"><?php esc_html_e( 'Completed', 'masterstudy-lms-learning-management-system' ); ?></span>
-									<span v-else><?php esc_html_e( 'Continue', 'masterstudy-lms-learning-management-system' ); ?></span>
+										'continue': course.progress !== '0',
+									}"
+									v-else
+								>
+									<span v-if="course.availability === '1'">
+										<?php esc_html_e( 'Coming soon', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
+									<span v-else-if="course.progress === '0'">
+										<?php esc_html_e( 'Start Program', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
+									<span v-else-if="course.progress === '100'">
+										<?php esc_html_e( 'Completed', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
+									<span v-else>
+										<?php esc_html_e( 'Resume Program', 'masterstudy-lms-learning-management-system' ); ?>
+									</span>
 								</a>
-								<?php
-							}
-							?>
-						</div>
-						<div class="stm_lms_instructor_courses__single--started">
-							{{ course.start_time }}
+							<?php endif; ?>
 						</div>
 					</div>
 				</div>
