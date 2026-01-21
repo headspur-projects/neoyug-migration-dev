@@ -7,7 +7,7 @@
 
 <div class="masterstudy-single-course-materials">
 	<span class="masterstudy-single-course-materials__title">
-		<?php echo esc_html__( 'Course materials', 'masterstudy-lms-learning-management-system' ); ?>
+		<?php echo esc_html__( 'Program materials', 'masterstudy-lms-learning-management-system' ); ?>
 	</span>
 	<?php
 	STM_LMS_Templates::show_lms_template(
