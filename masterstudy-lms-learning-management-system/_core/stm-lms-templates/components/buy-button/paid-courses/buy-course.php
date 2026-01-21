@@ -10,7 +10,7 @@ $is_sale = ! empty( $sale_price ) && ! empty( $sale_price_active );
 ?>
 <a href="#" class="masterstudy-buy-button__link" <?php echo wp_kses_post( implode( ' ', $attributes ) ); ?>>
 	<span class="masterstudy-buy-button__title">
-		<?php echo esc_html__( 'Get course', 'masterstudy-lms-learning-management-system' ); ?>
+		<?php echo esc_html__( 'Get program', 'masterstudy-lms-learning-management-system' ); ?>
 	</span>
 	<?php if ( ! empty( $price ) || ! empty( $sale_price ) ) : ?>
 		<span class="masterstudy-buy-button__separator"></span>
