@@ -233,11 +233,11 @@ $not_empty_stats            = $reviews || $point || $certificate || $enterprise 
 									<div class="stm-lms-course-info"
 										v-if="course_levels_php && course_levels_php[course.course_id]">
 										<div class="stm-lms-course-levelss">
-											<img src="https://staginglmsplugin.neoyug.com/wp-content/uploads/2026/01/level1-1.png" width="22" height="22" />
+											<img src="https://neoyug.com/wp-content/uploads/2026/01/level1-1-1.png" width="22" height="22" />
 											<span class="level">{{ course_levels_php[course.course_id].level_label }}</span>
 										</div>
 										<div class="stm-lms-course-lesson-count">
-											<img src="https://staginglmsplugin.neoyug.com/wp-content/uploads/2026/01/lectures1-1.png" width="22" height="22" />
+											<img src="https://neoyug.com/wp-content/uploads/2026/01/lectures1-1-1.png" width="22" height="22" />
 											<span class="lesson_count">{{ course_levels_php[course.course_id].lesson_count }} Modules</span>
 										</div>
 									</div>
@@ -251,7 +251,7 @@ $not_empty_stats            = $reviews || $point || $certificate || $enterprise 
 
 
 								<div class="stm_lms_instructor_courses__single--duration" v-if="course.duration">
-									<img src="https://staginglmsplugin.neoyug.com/wp-content/uploads/2026/01/clock1-1.png" width="22" height="22" />
+									<img src="https://neoyug.com/wp-content/uploads/2026/01/clock1-1-1.png" width="22" height="22" />
 									<span class="duration">{{ course.duration }}</span>
 								</div>
                                 
