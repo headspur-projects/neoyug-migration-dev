@@ -27,11 +27,11 @@ wp_localize_script(
 $titles = array(
 	'login'    => array(
 		'main'    => __( 'Sign In', 'masterstudy-lms-learning-management-system' ),
-		'account' => __( 'No account?', 'masterstudy-lms-learning-management-system' ),
+		'account' => __( 'If you don’t have an account?', 'masterstudy-lms-learning-management-system' ),
 	),
 	'register' => array(
-		'main'    => __( 'Sign Up', 'masterstudy-lms-learning-management-system' ),
-		'account' => __( 'Have account?', 'masterstudy-lms-learning-management-system' ),
+		'main'    => __( 'Create Account', 'masterstudy-lms-learning-management-system' ),
+		'account' => __( 'Already have an account?', 'masterstudy-lms-learning-management-system' ),
 	),
 );
 
@@ -42,7 +42,7 @@ $is_instructor                                = $is_instructor ?? false;
 $only_for_instructor                          = $only_for_instructor ?? false;
 $elementor_editor                             = $elementor_editor ?? false;
 $is_logged_in                                 = $elementor_editor ? false : is_user_logged_in();
-$titles['register']['main']                   = $only_for_instructor ? __( 'Instructor Sign Up', 'masterstudy-lms-learning-management-system' ) : $titles['register']['main'];
+$titles['register']['main']                   = $only_for_instructor ? __( 'Instructor Sign In', 'masterstudy-lms-learning-management-system' ) : $titles['register']['main'];
 $submission_status                            = get_user_meta( get_current_user_id(), 'submission_status', true );
 $settings                                     = get_option( 'stm_lms_settings' );
 $settings['user_premoderation']               = $settings['user_premoderation'] ?? false;
@@ -57,7 +57,7 @@ $recaptcha_enabled                            = STM_LMS_Helpers::g_recaptcha_ena
 $recaptcha                                    = $recaptcha_enabled ? STM_LMS_Helpers::g_recaptcha_keys() : '';
 $recaptcha_site_key                           = ! empty( $recaptcha['public'] ) ? stm_lms_filtered_output( $recaptcha['public'] ) : false;
 
-$auth_type = $settings['restrict_registration'] ? 'login' : $type;
+$auth_type = isset( $type ) && in_array( $type, array( 'login', 'register' ), true ) ? $type : 'login';
 
 if ( $is_logged_in && ! $only_for_instructor ) {
 	STM_LMS_Templates::show_lms_template(
@@ -122,10 +122,33 @@ if (typeof authorization_data === 'undefined') {
 }
 if (typeof authorization_settings === 'undefined') {
 	authorization_settings = {
-		'register_mode': '<?php echo esc_html( 'register' === $auth_type ? true : false ); ?>',
-		'titles': <?php echo wp_json_encode( $titles ); ?>,
+		register_mode: <?php echo ( 'register' === $auth_type ) ? 'true' : 'false'; ?>,
+		titles: <?php echo wp_json_encode( $titles ); ?>,
 	};
 }
+
+console.log('🧩 authorization_settings loaded:', authorization_settings);
+
+// Force default to login mode immediately on page load
+document.addEventListener('DOMContentLoaded', function () {
+	console.log('🧩 Forcing Sign In mode at load');
+	authorization_settings.register_mode = false;
+
+	// Hide register form & show login form right away
+	const loginForm = document.querySelector('.masterstudy-authorization_login');
+	const registerForm = document.querySelector('.masterstudy-authorization_register');
+
+	if (registerForm && registerForm.classList.contains('masterstudy-authorization_register')) {
+		registerForm.classList.remove('masterstudy-authorization_register');
+		registerForm.classList.add('masterstudy-authorization_login');
+	}
+
+	// Fix button text to “Sign In →”
+	const loginBtn = document.querySelector('#masterstudy-authorization-login-button .masterstudy-button__title');
+	if (loginBtn) loginBtn.textContent = 'Sign In →';
+});
+
+
 </script>
 <?php
 if ( $recaptcha_enabled ) {
@@ -159,7 +182,9 @@ if ( $modal ) {
 	<div class="masterstudy-authorization-modal <?php echo esc_attr( $dark_mode ? 'masterstudy-authorization-modal_dark-mode' : '' ); ?>" style="opacity:0">
 		<div class="masterstudy-authorization-modal__wrapper">
 			<div class="masterstudy-authorization-modal__container">
-				<span class="masterstudy-authorization-modal__close"></span>
+				<span class="masterstudy-authorization-modal__close">
+					<img class="site-logoo" width="58" height="30" src="https://staginglmsplugin.neoyug.com/wp-content/uploads/2026/01/lms-logo-1.png" />
+				</span>
 <?php } ?>
 <div class="masterstudy-authorization <?php echo esc_attr( $classes ); ?>">
 	<div class="masterstudy-authorization__wrapper">
@@ -209,12 +234,17 @@ if ( $modal ) {
 		?>
 		<div class="masterstudy-authorization__actions">
 			<div class="masterstudy-authorization__actions-remember">
-				<div class="masterstudy-authorization__checkbox">
-					<input type="checkbox" name="masterstudy-authorization-remember" id="masterstudy-authorization-remember"/>
-					<span class="masterstudy-authorization__checkbox-wrapper"></span>
+				<div class="masterstudy-authorization__actions-remember-wrapper">
+					<div class="masterstudy-authorization__checkbox">
+						<input type="checkbox" name="masterstudy-authorization-remember" id="masterstudy-authorization-remember"/>
+						<span class="masterstudy-authorization__checkbox-wrapper"></span>
+					</div>
+					<span class="masterstudy-authorization__checkbox-title">
+						<?php echo esc_html__( 'Remember me', 'masterstudy-lms-learning-management-system' ); ?>
+					</span>
 				</div>
-				<span class="masterstudy-authorization__checkbox-title">
-					<?php echo esc_html__( 'Remember me', 'masterstudy-lms-learning-management-system' ); ?>
+				<span class="masterstudy-authorization__switch-lost-pass">
+						<?php echo esc_html__( 'Forgot Password?', 'masterstudy-lms-learning-management-system' ); ?>
 				</span>
 			</div>
 			<?php
@@ -222,7 +252,7 @@ if ( $modal ) {
 				'components/button',
 				array(
 					'id'    => 'masterstudy-authorization-login-button',
-					'title' => __( 'Sign In', 'masterstudy-lms-learning-management-system' ),
+					'title' => __( 'Sign In →', 'masterstudy-lms-learning-management-system' ),
 					'link'  => '#',
 					'style' => 'primary',
 					'size'  => 'sm',
@@ -235,7 +265,7 @@ if ( $modal ) {
 					'components/button',
 					array(
 						'id'    => $only_for_instructor && $is_logged_in ? 'masterstudy-authorization-instructor-confirm' : 'masterstudy-authorization-register-button',
-						'title' => $only_for_instructor && $is_logged_in ? __( 'Send request', 'masterstudy-lms-learning-management-system' ) : __( 'Sign Up', 'masterstudy-lms-learning-management-system' ),
+						'title' => $only_for_instructor && $is_logged_in ? __( 'Send request', 'masterstudy-lms-learning-management-system' ) : __( 'Sign Up →', 'masterstudy-lms-learning-management-system' ),
 						'link'  => '#',
 						'style' => 'primary',
 						'size'  => 'sm',
@@ -274,7 +304,7 @@ if ( $modal ) {
 							<?php echo esc_html( 'register' === $auth_type ? $titles['register']['account'] : $titles['login']['account'] ); ?>
 						</span>
 						<a href="#" id="masterstudy-authorization-sign-up" class="masterstudy-authorization__switch-account-link">
-							<?php echo esc_html__( 'Sign Up', 'masterstudy-lms-learning-management-system' ); ?>
+							<?php echo esc_html__( 'Create Account', 'masterstudy-lms-learning-management-system' ); ?>
 						</a>
 						<a href="#" id="masterstudy-authorization-sign-in" class="masterstudy-authorization__switch-account-link">
 							<?php echo esc_html__( 'Sign In', 'masterstudy-lms-learning-management-system' ); ?>
@@ -291,9 +321,6 @@ if ( $modal ) {
 						</span>
 					</div>
 				<?php } ?>
-				<span class="masterstudy-authorization__switch-lost-pass">
-						<?php echo esc_html__( 'Lost Password?', 'masterstudy-lms-learning-management-system' ); ?>
-				</span>
 			</div>
 		</div>
 	<?php } ?>
