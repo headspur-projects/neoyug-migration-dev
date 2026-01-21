@@ -61,7 +61,7 @@ if ( ! empty( $course_ids ) ) { ?>
 	<div class="masterstudy-related-courses <?php echo esc_attr( 'vertical' === $style ? 'masterstudy-related-courses_vertical' : '' ); ?>">
 		<?php if ( $show_title ) { ?>
 			<span class="masterstudy-related-courses__title">
-				<?php echo esc_html__( 'Related courses', 'masterstudy-lms-learning-management-system' ); ?>
+				<?php echo esc_html__( 'Related programs', 'masterstudy-lms-learning-management-system' ); ?>
 			</span>
 		<?php } ?>
 		<ul class="masterstudy-related-courses__list">
