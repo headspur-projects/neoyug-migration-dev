@@ -36,7 +36,7 @@ $instructor_public = STM_LMS_Options::get_option( 'instructor_public_profile', t
 	<div class="masterstudy-popular-courses <?php echo esc_attr( 'horizontal' === $style ? 'masterstudy-popular-courses_horizontal' : '' ); ?>">
 		<?php if ( $show_title ) { ?>
 			<span class="masterstudy-popular-courses__title">
-				<?php echo esc_html__( 'Popular courses', 'masterstudy-lms-learning-management-system' ); ?>
+				<?php echo esc_html__( 'Popular programs', 'masterstudy-lms-learning-management-system' ); ?>
 			</span>
 		<?php } ?>
 		<ul class="masterstudy-popular-courses__list">
