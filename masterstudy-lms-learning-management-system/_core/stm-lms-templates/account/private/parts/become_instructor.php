@@ -20,7 +20,7 @@ $class   = ( 'pending' === $status ) ? 'disabled' : '';
 		if ( 'pending' === $status ) {
 			esc_html_e( 'Pending...', 'masterstudy-lms-learning-management-system' );
 		} else {
-			esc_html_e( 'Submit Request', 'masterstudy-lms-learning-management-system' );
+			esc_html_e( 'Become an Instructor?', 'masterstudy-lms-learning-management-system' );
 		}
 		?>
 	</a>
