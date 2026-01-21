@@ -29,11 +29,11 @@
 
 			<div class="col-md-9 col-sm-12">
 
-				<div class="stm_lms_private_information">
+				<!-- <div class="stm_lms_private_information">
 
 					<?php STM_LMS_Templates::show_lms_template( 'account/private/parts/top_info', array( 'current_user' => $lms_current_user ) ); ?>
 
-				</div>
+				</div> -->
 
 				<?php STM_LMS_Templates::show_lms_template( 'account/private/parts/edit_account', array( 'current_user' => $lms_current_user ) ); ?>
 				<?php do_action( 'stm_lms_before_profile_buttons_all', $lms_current_user ); ?>
