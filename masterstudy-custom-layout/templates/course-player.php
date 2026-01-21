@@ -1,6 +1,5 @@
 <!-- course-player -->
 
-<!-- latest working code includes resources content 26/10/25 -->
 
 <?php
 /**
@@ -829,6 +828,22 @@ do_action( 'stm_lms_before_item_template_start', $data['post_id'], $data['item_i
     .lesson-item.active-lesson {
         background: rgba(34,122,255,0.3);
     }
+
+    #course-compl {
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    #course-compl:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Remove the disabled state styles */
+    #course-compl.disabled {
+        opacity: 1; /* Override - button is always enabled */
+        cursor: pointer;
+    }
     
     .masterstudy-authorization__instructor-already {
         display: none;
@@ -918,6 +933,7 @@ global $post;
 $course_id  = isset( $data['course_id'] ) ? intval( $data['course_id'] ) : ( isset( $post->ID ) ? $post->ID : 0 );
 $wishlisted = STM_LMS_User::is_wishlisted( $course_id );
 ?>
+<a class="account_linkk" href="https://neoyug.com/user-account/"><img src="https://neoyug.com/wp-content/uploads/2026/01/user-account-1.png" width="25" height="25" alt="Account Icon" /></a>
             <!-- <button type="button" 
                     class="bookmark-btn <?php echo $wishlisted ? 'bookmarked' : ''; ?>" 
                     data-id="<?php echo esc_attr( $course_id ); ?>">
@@ -1066,12 +1082,16 @@ $wishlisted = STM_LMS_User::is_wishlisted( $course_id );
                             }
                         }
                         
+                       
                         if ( $next_lesson_url ) : ?>
                             <a href="<?php echo esc_url( $next_lesson_url ); ?>" class="continue-btn next-lesson-btn">
-                                Continue - Next Lesson
+                                Continue - Next Module
                             </a>
                         <?php else : ?>
-                            <button id="course-compl" class="continue-btn next-lesson-btn">Course Complete</button>
+                            <!-- ✅ Course Complete button - ALWAYS ENABLED on last lesson -->
+                            <button id="course-compl" class="continue-btn next-lesson-btn" type="button">
+                                Program Complete
+                            </button>
                         <?php endif; ?>
                         
                         <!-- <button class="chat-btn">
@@ -1197,7 +1217,7 @@ if ( $has_access && $data['item_id'] != $first_lesson_id ) {
 
     <?php if ( $has_access ) : ?>
         <button class="nav-tab <?php echo $default_tab === 'lessons' ? 'active' : ''; ?>" data-tab="lessons">
-            Lessons
+            Modules
         </button>
 
         <?php
@@ -1262,7 +1282,7 @@ $has_resources = !empty( $course_files );
                 <div class="tab-content <?php echo $default_tab === 'overview' ? 'active' : ''; ?>" id="overview-content">
                     <div class="overview-section">
                         <div class="course-overview">
-                            <h3>About This Course</h3>
+                            <h3>About This Program</h3>
                             <div class="course-description">
                                 <?php 
                                 $course_excerpt = get_post_field( 'post_excerpt', $data['post_id'] );
@@ -1273,7 +1293,7 @@ $has_resources = !empty( $course_files );
                                 } elseif ( !empty( $course_content ) ) {
                                     echo wp_kses_post( wp_trim_words( $course_content, 50 ) );
                                 } else {
-                                    echo '<p>Discover the transformative power of this comprehensive course designed to enhance your learning experience.</p>';
+                                    echo '<p>Discover the transformative power of this comprehensive program designed to enhance your learning experience.</p>';
                                 }
                                 ?>
                             </div>
@@ -1282,7 +1302,7 @@ $has_resources = !empty( $course_files );
                                 <div class="course-stats">
                                     <div class="stat-item">
                                         <span class="stat-number"><?php echo count( $data['material_ids'] ); ?></span>
-                                        <span class="stat-label">Lessons</span>
+                                        <span class="stat-label">Modules</span>
                                     </div>
                                     <div class="stat-item">
                                         <span class="stat-number"><?php echo count( $data['curriculum'] ); ?></span>
@@ -1324,7 +1344,7 @@ $has_resources = !empty( $course_files );
                                                 </div>
                                                 <div class="lesson-preview-info">
                                                     <h5><?php echo esc_html( $first_lesson['title'] ); ?></h5>
-                                                    <p>Begin your journey with this introductory lesson</p>
+                                                    <p>Begin your journey with this introductory module</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1415,7 +1435,7 @@ $has_resources = !empty( $course_files );
         switch ( $lesson_type ) {
             case 'stm-quizzes': $type_label = 'QUIZ'; break;
             case 'stm-assignments': $type_label = 'ASSIGNMENT'; break;
-            default: $type_label = 'LESSON';
+            default: $type_label = 'MODULE';
         }
 
         // ✅ Check for lesson locked by drip or before start
@@ -1683,8 +1703,8 @@ $is_course_completed = ($total_lessons > 0 && $completed_lessons_count === $tota
         </div>
       </div>
    
-      <p class="popup-message">You have successfully completed the course</p>
-      <h2 class="popup-course-title">Videos Course</h2>
+      <p class="popup-message">You have successfully completed the program</p>
+      <h2 class="popup-course-title"><?php echo esc_html( $data['course_title'] ); ?></h2>
       <div class="popup-media-info">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <circle cx="10" cy="10" r="9" stroke="#FF9800" stroke-width="2"/>
@@ -1694,7 +1714,7 @@ $is_course_completed = ($total_lessons > 0 && $completed_lessons_count === $tota
       </div>
       <div class="popup-buttons">
         <!-- <button class="popup-btn primary" id="view-certificate-btn">Certificate</button> -->
-        <button class="popup-btn secondary" onclick="window.location.href='<?php echo esc_url( $data['course_url'] ); ?>'" id="view-course-btn">View Course</button>
+        <button class="popup-btn secondary" onclick="window.location.href='<?php echo esc_url( $data['course_url'] ); ?>'" id="view-course-btn">View Program</button>
         <button class="popup-btn secondary" id="leave-review-btn">Leave Review</button>
       </div>
     </div>
@@ -1710,7 +1730,7 @@ setTimeout(() => {
   } else {
     console.warn('⚠️ video_player_data not found after delay');
   }
-}, 1000); // wait 1 second
+}, 800); // wait 1 second
 </script>
 
 <script>
@@ -1726,36 +1746,24 @@ window.stm_lms_nonces = {
 jQuery(function($) {
 
     // ✅ Function to update the progress counter
-    function updateProgress() {
-        const lessonItems = document.querySelectorAll('.lesson-item');
-        const completedLessons = document.querySelectorAll('.lesson-item.completed');
-        const totalCount = lessonItems.length;
-        const completedCount = completedLessons.length;
+window.updateProgress = function () {
+    const lessonItems = document.querySelectorAll('.lesson-item');
+    const completedLessons = document.querySelectorAll('.lesson-item.completed');
+    const totalCount = lessonItems.length;
+    const completedCount = completedLessons.length;
 
-        const progressElement = document.getElementById('progress-count');
-        if (progressElement) {
-            progressElement.textContent = `${completedCount} / ${totalCount} Completed`;
-        }
-
-        // ✅ Also update the progress bar
-        const progressFill = document.getElementById('progress-fill');
-        if (progressFill) {
-            const percent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-            progressFill.style.width = percent + '%';
-        }
-
-        // ✅ Disable or enable "Course Complete" button
-        const courseComplBtn = document.getElementById('course-compl');
-        if (courseComplBtn) {
-            if (completedCount === totalCount && totalCount > 0) {
-                courseComplBtn.disabled = false;
-                courseComplBtn.classList.remove('disabled');
-            } else {
-                courseComplBtn.disabled = true;
-                courseComplBtn.classList.add('disabled');
-            }
-        }
+    const progressElement = document.getElementById('progress-count');
+    if (progressElement) {
+        progressElement.textContent = `${completedCount} / ${totalCount} Completed`;
     }
+
+    const progressFill = document.getElementById('progress-fill');
+    if (progressFill) {
+        const percent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+        progressFill.style.width = percent + '%';
+    }
+};
+
 
     // ✅ Restore completion state from localStorage
     const completedLessons = JSON.parse(localStorage.getItem('completedLessons') || '[]');
@@ -1812,7 +1820,7 @@ $.ajax({
         setTimeout(() => {
             console.log('➡️ Navigating to next lesson:', nextLessonUrl);
             window.location.href = nextLessonUrl;
-        }, 1500);
+        }, 800);
     }
 });
 
@@ -1852,66 +1860,6 @@ $('body').on('click', '.lesson-status', function() {
 
 });
 
-// ✅ jQuery to fetch updated progress from server after lesson change
-
-jQuery(function($) {
-    console.log("🚀 Course Progress Tracker Initialized");
-
-async function fetchCourseProgress(courseId) {
-  if (!courseId) return;
-  console.log("📘 Fetching updated progress for course:", courseId);
-
-  try {
-    const response = await jQuery.ajax({
-      url: `${stm_lms_ajaxurl}?action=stm_lms_total_progress&course_id=${courseId}&nonce=${stm_lms_nonces.stm_lms_total_progress}`,
-      method: "GET",
-      dataType: "json"
-    });
-
-    console.log("✅ Updated progress response:", response);
-
-    if (response && response.course && response.course.progress_percent !== undefined) {
-      const percent = response.course.progress_percent;
-      console.log("📊 Updated Course progress:", percent + "%");
-
-      // ✅ Update progress bar visually
-      const progressFill = document.getElementById("progress-fill");
-      if (progressFill) progressFill.style.width = percent + "%";
-
-      // ✅ Update text if available
-      const progressElement = document.getElementById("progress-count");
-      if (
-        progressElement &&
-        response.curriculum?.multimedia?.completed !== undefined &&
-        response.curriculum?.multimedia?.total !== undefined
-      ) {
-        const completed = response.curriculum.multimedia.completed;
-        const total = response.curriculum.multimedia.total;
-        progressElement.textContent = `${completed} / ${total} Completed`;
-      }
-    }
-  } catch (err) {
-    console.error("❌ Error fetching progress:", err);
-  }
-}
-
-
-
-
-    // 🔹 Optionally, auto-refresh progress when lesson changes
-    const observer = new MutationObserver(() => {
-        const activeLesson = document.querySelector('.lesson-item.active-lesson');
-        if (activeLesson) {
-            fetchCourseProgress(window.MASTERSTUDY_COURSE_ID);
-        }
-    });
-
-    const lessonsContainer = document.querySelector('.lessons-section');
-    if (lessonsContainer) {
-        observer.observe(lessonsContainer, { attributes: true, subtree: true, childList: true });
-    }
-
-});
 
 
 
@@ -1955,6 +1903,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial check
   checkAndShowPopup();
 
+  // ✅ Function to check if we're on the last lesson
+    function isLastLesson() {
+        const lessonItems = document.querySelectorAll('.lesson-item');
+        const activeLesson = document.querySelector('.lesson-item.active-lesson');
+        if (!activeLesson || !lessonItems.length) return false;
+        const lastLesson = lessonItems[lessonItems.length - 1];
+        return activeLesson === lastLesson;
+    }
+
   // ✅ Close popup
   closeBtns.forEach(btn => btn.addEventListener("click", () => {
     popup.style.display = "none";
@@ -1995,13 +1952,26 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// ✅ Function to manually show popup (for debugging)
+// ✅ Function to manually show popup
 function showCourseCompletePopup() {
   const popup = document.getElementById('custom-course-complete-popup');
-  if (popup) {
-    popup.style.display = 'flex';
-    sessionStorage.removeItem('course_complete_popup_dismissed');
-  }
+  if (!popup) return;
+
+  // Update popup with current stats
+  const lessonItems = document.querySelectorAll('.lesson-item');
+  const completedLessons = document.querySelectorAll('.lesson-item.completed');
+  const totalCount = lessonItems.length;
+  const completedCount = completedLessons.length;
+  const percent = totalCount ? Math.round((completedCount / totalCount) * 100) : 0;
+
+  const scoreElement = popup.querySelector('.popup-score');
+  if (scoreElement) scoreElement.textContent = percent + '%';
+  
+  const mediaInfo = popup.querySelector('.popup-media-info strong');
+  if (mediaInfo) mediaInfo.textContent = `${completedCount}/${totalCount}`;
+
+  popup.style.display = 'flex';
+  sessionStorage.removeItem('course_complete_popup_dismissed');
 }
 
 function resetCourseCompletePopup() {
@@ -2012,14 +1982,65 @@ function resetCourseCompletePopup() {
 // ✅ Handle Course Complete button click
 document.addEventListener("DOMContentLoaded", () => {
   const courseComplBtn = document.getElementById('course-compl');
-  if (courseComplBtn) {
-    courseComplBtn.disabled = true; // start disabled
-    courseComplBtn.classList.add('disabled');
+  if (!courseComplBtn) return;
 
-    courseComplBtn.addEventListener('click', () => {
-      showCourseCompletePopup();
+  courseComplBtn.addEventListener('click', function(e) {
+    e.preventDefault(); // ⛔ Prevent any default behavior
+    e.stopPropagation(); // ⛔ Stop event bubbling
+
+    console.log('🟩 Course Complete button clicked');
+
+    // ✅ Get current lesson info
+    const $currentLesson = jQuery('.lesson-item.active-lesson');
+    const courseId = window.MASTERSTUDY_COURSE_ID;
+
+    if (!$currentLesson.length || !courseId) {
+      console.warn('⚠️ No active lesson found or course ID missing');
+      return;
+    }
+
+    const currentLessonId = parseInt($currentLesson.data('lesson-id'));
+    console.log(`🟩 Marking last lesson ${currentLessonId} as complete`);
+
+    // ✅ Mark lesson as completed in UI immediately
+    $currentLesson.addClass('completed').removeClass('incomplete');
+    $currentLesson.find('.lesson-checkmark').show();
+    $currentLesson.find('.next-arrow').hide();
+
+    // ✅ Save to localStorage
+    let stored = JSON.parse(localStorage.getItem('completedLessons') || '[]');
+    if (!stored.includes(currentLessonId)) {
+      stored.push(currentLessonId);
+      localStorage.setItem('completedLessons', JSON.stringify(stored));
+    }
+
+    // ✅ Update progress UI
+    updateProgress();
+
+    // ✅ Send AJAX request to mark lesson complete on server
+    jQuery.ajax({
+      url: stm_lms_ajaxurl,
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        action: 'stm_lms_complete_lesson',
+        lesson_id: currentLessonId,
+        course_id: courseId,
+        nonce: stm_lms_nonces.stm_lms_complete_lesson
+      },
+      success: function(res) {
+        console.log('✅ Lesson completion response:', res);
+      },
+      error: function(err) {
+        console.error('❌ Error marking lesson complete:', err);
+      },
+      complete: function() {
+        // ✅ After marking complete, show popup
+        console.log('🎉 Showing course complete popup');
+        showCourseCompletePopup();
+      }
     });
-  }
+  });
 });
 
 </script>
