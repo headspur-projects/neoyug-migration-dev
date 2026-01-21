@@ -240,8 +240,8 @@ class STM_LMS_User_Menu {
 			'id'           => 'enrolled_courses',
 			'slug'         => 'enrolled-courses',
 			'lms_template' => 'stm-lms-user-courses',
-			'menu_title'   => esc_html__( 'Enrolled Courses', 'masterstudy-lms-learning-management-system' ),
-			'menu_icon'    => 'stmlms-book-2',
+			'menu_title'   => esc_html__( 'Enrolled Programs', 'masterstudy-lms-learning-management-system' ),
+			'menu_icon'    => 'fa-book',
 			'menu_url'     => ms_plugin_user_account_url( 'enrolled-courses' ),
 			'is_active'    => ( ! $is_instructor && intval( $settings['user_url'] ?? null ) === get_queried_object_id() ),
 			'menu_place'   => 'learning',
@@ -253,48 +253,48 @@ class STM_LMS_User_Menu {
 				'id'           => 'settings',
 				'slug'         => 'settings',
 				'lms_template' => 'stm-lms-user-settings',
-				'menu_title'   => esc_html__( 'Settings', 'masterstudy-lms-learning-management-system' ),
-				'menu_icon'    => 'stmlms-cog-2',
+				'menu_title'   => esc_html__( 'Profile', 'masterstudy-lms-learning-management-system' ),
+				'menu_icon'    => 'fa-cog',
 				'menu_url'     => ms_plugin_user_account_url( 'settings' ),
 				'menu_place'   => 'learning',
 			);
 		}
 
-		if ( apply_filters( 'float_menu_item_enabled', true ) ) {
-			$menus[] = array(
-				'order'        => 120,
-				'id'           => 'messages',
-				'slug'         => 'chat',
-				'lms_template' => 'stm-lms-user-chats',
-				'menu_title'   => esc_html__( 'Messages', 'masterstudy-lms-learning-management-system' ),
-				'menu_icon'    => 'stmlms-envelope-2',
-				'menu_url'     => ms_plugin_user_account_url( 'chat' ),
-				'badge_count'  => STM_LMS_Chat::user_new_messages( $user_id ),
-				'menu_place'   => 'learning',
-			);
-		}
+		// if ( apply_filters( 'float_menu_item_enabled', true ) ) {
+		// 	$menus[] = array(
+		// 		'order'        => 120,
+		// 		'id'           => 'messages',
+		// 		'slug'         => 'chat',
+		// 		'lms_template' => 'stm-lms-user-chats',
+		// 		'menu_title'   => esc_html__( 'Messages', 'masterstudy-lms-learning-management-system' ),
+		// 		'menu_icon'    => 'stmlms-envelope-2',
+		// 		'menu_url'     => ms_plugin_user_account_url( 'chat' ),
+		// 		'badge_count'  => STM_LMS_Chat::user_new_messages( $user_id ),
+		// 		'menu_place'   => 'learning',
+		// 	);
+		// }
 
-		$menus[] = array(
-			'order'        => 130,
-			'id'           => 'favorite_courses',
-			'slug'         => 'wishlist',
-			'lms_template' => 'stm-lms-wishlist',
-			'menu_title'   => esc_html__( 'Wishlist', 'masterstudy-lms-learning-management-system' ),
-			'menu_icon'    => 'stmlms-star-3',
-			'menu_url'     => STM_LMS_User::wishlist_url(),
-			'is_active'    => ( ! empty( $settings['wishlist_url'] ) ) ? $settings['wishlist_url'] : '',
-			'menu_place'   => 'learning',
-		);
-		$menus[] = array(
-			'order'        => 140,
-			'id'           => 'enrolled_quizzes',
-			'slug'         => 'enrolled-quizzes',
-			'lms_template' => 'stm-lms-user-quizzes',
-			'menu_title'   => esc_html__( 'Enrolled Quizzes', 'masterstudy-lms-learning-management-system' ),
-			'menu_icon'    => 'stmlms-question-2',
-			'menu_url'     => ms_plugin_user_account_url( 'enrolled-quizzes' ),
-			'menu_place'   => 'learning',
-		);
+		// $menus[] = array(
+		// 	'order'        => 130,
+		// 	'id'           => 'favorite_courses',
+		// 	'slug'         => 'wishlist',
+		// 	'lms_template' => 'stm-lms-wishlist',
+		// 	'menu_title'   => esc_html__( 'Wishlist', 'masterstudy-lms-learning-management-system' ),
+		// 	'menu_icon'    => 'stmlms-star-3',
+		// 	'menu_url'     => STM_LMS_User::wishlist_url(),
+		// 	'is_active'    => ( ! empty( $settings['wishlist_url'] ) ) ? $settings['wishlist_url'] : '',
+		// 	'menu_place'   => 'learning',
+		// );
+		// $menus[] = array(
+		// 	'order'        => 140,
+		// 	'id'           => 'enrolled_quizzes',
+		// 	'slug'         => 'enrolled-quizzes',
+		// 	'lms_template' => 'stm-lms-user-quizzes',
+		// 	'menu_title'   => esc_html__( 'Enrolled Quizzes', 'masterstudy-lms-learning-management-system' ),
+		// 	'menu_icon'    => 'stmlms-question-2',
+		// 	'menu_url'     => ms_plugin_user_account_url( 'enrolled-quizzes' ),
+		// 	'menu_place'   => 'learning',
+		// );
 		$menus[] = array(
 			'order'        => 150,
 			'id'           => 'my_orders',
