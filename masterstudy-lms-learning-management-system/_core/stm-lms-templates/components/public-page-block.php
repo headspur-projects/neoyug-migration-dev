@@ -11,14 +11,14 @@ $public_page_url = isset( $student ) ? STM_LMS_User::student_public_page_url( $u
 
 <div class="masterstudy-public-page-block">
 	<a href="<?php echo esc_url( $public_page_url ); ?>" class="masterstudy-public-page-block-link" target="_blank">
-		<?php echo esc_html__( 'View Public Profile', 'masterstudy-lms-learning-management-system' ); ?>
+		<?php echo esc_html__( 'View Profile', 'masterstudy-lms-learning-management-system' ); ?>
 	</a>
 	<?php
 	STM_LMS_Templates::show_lms_template(
 		'components/share',
 		array(
 			'url'   => $public_page_url,
-			'label' => __( 'Share Public Profile', 'masterstudy-lms-learning-management-system' ),
+			'label' => __( 'Share Profile', 'masterstudy-lms-learning-management-system' ),
 		)
 	);
 	?>
